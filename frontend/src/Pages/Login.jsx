@@ -1,14 +1,16 @@
 import React, { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    console.log("Logging in:", email, password);
-    // TODO: call FastAPI backend
-  };
+const navigate = useNavigate();
+
+const handleLogin = (e) => {
+  e.preventDefault();
+  navigate("/dashboard");
+};
+
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
