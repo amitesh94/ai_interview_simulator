@@ -6,9 +6,23 @@ export default function Login() {
 
 const navigate = useNavigate();
 
-const handleLogin = (e) => {
+const handleLogin = async (e) => {
   e.preventDefault();
-  navigate("/dashboard");
+
+  const res = await fetch("http://127.0.0.1:8000/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+
+  const data = await res.json();
+
+  if (res.ok) {
+    localStorage.setItem("token", data.access_token);
+    navigate("/dashboard");
+  } else {
+    alert(data.detail);
+  }
 };
 
 
@@ -58,7 +72,7 @@ const handleLogin = (e) => {
         {/* Signup Link */}
         <p className="text-center text-gray-600 mt-4">
           Don't have an account?{" "}
-          <span className="text-blue-600 cursor-pointer">Sign Up</span>
+          <span className="text-blue-600 cursor-pointer"  onClick={() => navigate("/register")}>Sign Up</span>
         </p>
       </div>
     </div>
