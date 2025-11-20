@@ -1,18 +1,19 @@
-from passlib.context import CryptContext
-import hashlib
+import bcrypt
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-def hash_password(password: str):
-    # Encode to bytes, truncate to 72 bytes (bcrypt limit), then hash
+def hash_password(password: str) -> str:
+    """Hash password using bcrypt directly."""
+    # Encode to bytes and truncate to 72 bytes (bcrypt limit)
     password_bytes = password.encode("utf-8")[:72]
-    password_str = password_bytes.decode("utf-8", errors="ignore")
-    return pwd_context.hash(password_str)
+    # Generate salt and hash
+    salt = bcrypt.gensalt(rounds=12)
+    hashed = bcrypt.hashpw(password_bytes, salt)
+    return hashed.decode("utf-8")
 
 
-def verify_password(plain_password: str, hashed_password: str):
-    # Encode to bytes, truncate to 72 bytes (bcrypt limit)
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Verify password using bcrypt directly."""
+    # Encode to bytes and truncate to 72 bytes (bcrypt limit)
     password_bytes = plain_password.encode("utf-8")[:72]
-    password_str = password_bytes.decode("utf-8", errors="ignore")
-    return pwd_context.verify(password_str, hashed_password)
+    # Compare with stored hash
+    return bcrypt.checkpw(password_bytes, hashed_password.encode("utf-8"))
 

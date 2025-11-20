@@ -14,3 +14,5 @@ class UserResponse(BaseModel):
 
     class Config:
         orm_mode = True
+class Message(BaseModel):
+    text: str

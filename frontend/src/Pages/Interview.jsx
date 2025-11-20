@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import Webcam from "react-webcam";
+import { authHeader } from "../utils/auth";
 
 export default function Interview() {
   const webcamRef = useRef(null);
@@ -39,34 +40,31 @@ export default function Interview() {
   const sendMessage = async () => {
   if (!userInput.trim()) return;
 
-  // Add user message to UI immediately
-  setMessages([...messages, { from: "user", text: userInput }]);
+  // Add user message to UI
+  setMessages((prev) => [...prev, { from: "user", text: userInput }]);
 
   try {
     const res = await fetch("http://127.0.0.1:8000/chat", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        ...authHeader(),
       },
       body: JSON.stringify({ text: userInput }),
     });
 
     const data = await res.json();
 
-    // Add AI reply
-    setMessages((prev) => [
-      ...prev,
-      { from: "ai", text: data.reply }
-    ]);
-
+    // Add AI reply to UI
+    setMessages((prev) => [...prev, { from: "ai", text: data.reply }]);
   } catch (error) {
     setMessages((prev) => [
       ...prev,
-      { from: "ai", text: "⚠️ Error connecting to server!" },
+      { from: "ai", text: "Error connecting to AI." }
     ]);
   }
 
-  setUserInput("");
+  setUserInput(""); // Clear input
 };
 
   return (
