@@ -16,3 +16,8 @@ class UserResponse(BaseModel):
         orm_mode = True
 class Message(BaseModel):
     text: str
+# -----------------------------
+# EVALUATION REQUEST (NEW)
+# -----------------------------
+class EvalRequest(BaseModel):
+    text: str
